@@ -6,6 +6,7 @@ from imutils.video import VideoStream
 import argparse
 
 
+print("[Instruction] Press K to take a Screenshot, Press Q to Quit")
 ap = argparse.ArgumentParser()
 ap.add_argument("-o", "--output", required=False,
                 help="screenshots/")
@@ -44,7 +45,6 @@ while True:
     elif key == ord("q"):
         break
 
-print("[INFO] {} face images stored".format(total))
-print("[INFO] cleaning up...")
+print("[INFO] {} images captured".format(total))
 cv2.destroyAllWindows()
 vs.stop()
