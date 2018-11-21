@@ -7,20 +7,24 @@ import argparse
 
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-o", "--output", required=True,
+ap.add_argument("-o", "--output", required=False,
                 help="screenshots/")
 dir_path = os.path.dirname(os.path.realpath(__file__))
 args = vars(ap.parse_args())
 detector = cv2.CascadeClassifier(dir_path+"\haarcascade_frontalface_default.xml")
-print("[INFO] starting video stream...")
-dir_path = dir_path+"\output\ ";
+print("[Info] Starting Display")
+dir_path = dir_path+"\output"
+if args["output"] != "":
+    dir_path += "\_" + args["output"]
+else:
+    dir_path += "default"
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
 total = 0
 while True:
     frame = vs.read()
     orig = frame.copy()
-    frame = imutils.resize(frame, width=400)
+    frame = imutils.resize(frame, width=800)
 
     rects = detector.detectMultiScale(
         cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), scaleFactor=1.1,
@@ -31,7 +35,8 @@ while True:
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
     if key == ord("k"):
-        print(dir_path)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
         p = os.path.sep.join([dir_path, "{}.png".format(
             str(total).zfill(5))])
         cv2.imwrite(p, orig)
